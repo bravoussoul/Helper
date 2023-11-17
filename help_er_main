@@ -1,0 +1,42 @@
+import datetime
+import requests
+
+class AIHelperBot:
+    def __init__(self, name):
+        self.name = name
+
+    def greet_user(self):
+        hour = datetime.datetime.now().hour
+        if hour < 12:
+            return "Good morning! How can I assist you today?"
+        elif 12 <= hour < 18:
+            return "Good afternoon! How can I assist you today?"
+        else:
+            return "Good evening! How can I assist you today?"
+
+    def get_weather(self, city):
+        # Note: You need to sign up for OpenWeatherMap API and get an API key
+        api_key = "YOUR_API_KEY"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+        response = requests.get(url)
+        data = response.json()
+        if response.status_code == 200:
+            temperature = data['main']['temp']
+            description = data['weather'][0]['description']
+            return f"The current temperature in {city} is {temperature}°C with {description}."
+        else:
+            return "Sorry, I couldn't retrieve the weather information."
+
+    def respond_to_command(self, command):
+        if command == "hello":
+            return "Hello! I'm here to help you."
+        elif command == "time":
+            return f"The current time is {datetime.datetime.now().strftime('%H:%M')}."
+        else:
+            return "I'm not sure how to respond to that. Can you try a different command?"
+
+# Example usage
+bot = AIHelperBot("HelperBot")
+print(bot.greet_user())
+print(bot.respond_to_command("hello"))
+print(bot.get_weather("New York"))  # Replace 'New York' with your city
